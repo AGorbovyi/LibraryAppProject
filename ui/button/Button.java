@@ -1,18 +1,31 @@
-package main.java.libraryapp.ui.button;
+package ui.button;
 
+import service.IService;
+import service.Service;
+
+import java.util.HashMap;
+
+/**
+ * AIT-TR, cohort 42.1, Java Basic, Project1
+ *
+ * @author: Anton Gorbovyi
+ * @version: 12.05.2024
+ **/
 public abstract class Button {
-    private List<Service> services;
-    Button(List<Service> services) {
-        this.services = services;
+    private final HashMap<String, Service> services;
+
+    public Button() {
+        this.services = new HashMap<>();
     }
-    public getServices(){
-        return services;
+    public HashMap<String, Service> getServices(){
+        return this.services;
     }
-    public getService(String name){
-        for(Service service : services){
-            if (service.getName().equals(name)){
-                return service;
-            }
-        }
+
+    public IService getService(String name){
+        return services.get(name);
+    }
+
+    public void put(String key, Service value){
+        this.services.put(key,value);
     }
 }

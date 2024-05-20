@@ -1,4 +1,10 @@
-package libraryapp.repository;
+package repository;
+
+import entity.User;
+import entity.UserCard;
+
+import java.util.*;
+
 /**
  * AIT-TR, cohort 42.1, Java Basic, Project1
  *
@@ -6,13 +12,8 @@ package libraryapp.repository;
  * @version 21-Apr-24
  **/
 
-import libraryapp.entity.User;
-import libraryapp.entity.UserCard;
-
-import java.util.*;
-
-public class UserCardRepository implements CrudRepository<Integer, UserCard> {
-    private final Map<Integer, UserCard> userCards;
+public class UserCardRepository implements CrudRepository<UUID, UserCard> {
+    private Map<UUID, UserCard> userCards;
 
     public UserCardRepository() {
         this.userCards = new HashMap<>();
@@ -26,7 +27,7 @@ public class UserCardRepository implements CrudRepository<Integer, UserCard> {
     @Override
     public UserCard get(UUID key) {
         for (UserCard card : userCards.values()) {
-            if (card.getUserId() == key) {
+            if (card.getUserId().equals(key)) {
                 return card;
             }
         }
@@ -34,22 +35,16 @@ public class UserCardRepository implements CrudRepository<Integer, UserCard> {
     }
 
     @Override
-    public void remove(UUID key) {
-        for (int i = 0; i < userCards.size(); i++) {
-            if (userCards.get(i).getUserId() == key) {
-                userCards.remove(i);
-            }
-        }
+    public void remove(UserCard value) {
+        userCards.remove(value);
     }
 
     @Override
-    public Collection<UserCard> values() {
+    public Iterable<UserCard> values() {
         return userCards.values();
     }
-//    public Iterable<Object> findAll() {
-//        return Collections.singleton(userCards.values());
-//    }
 
+    @Override
     public void init() {
         List<User> usersList = new ArrayList<>(List.of(
                 new User("Anton", "Gorbovyi"),

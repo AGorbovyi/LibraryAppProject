@@ -1,27 +1,48 @@
-package libraryapp.ui;
+package ui;
+
+import service.BookCatalogService;
+import service.Service;
+import ui.button.Back;
+import ui.button.ExitMenu;
+import ui.button.MenuCommand;
+import ui.button.book.FindByAuthor;
+import ui.button.book.FindById;
+import ui.button.book.FindByTitle;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  * AIT-TR, cohort 42.1, Java Basic, Project1
  *
  * @author: Anton Gorbovyi
- * @version: 22.04.2024
+ * @version: 12.05.2024
  **/
-
-import libraryapp.ui.button.ExitMenu;
-import libraryapp.ui.button.MenuCommand;
-import main.java.libraryapp.ui.IMenu;
-
-import java.util.List;
-import java.util.Scanner;
-
 public class FindBookMenu implements IMenu{
 
-    ExitMenu exitMenu;
+    private final String menuName;
+    private List<MenuCommand> commands;
 
-    private final List<MenuCommand> commands;
+    public FindBookMenu(HashMap<String, Service> services, IMenu menu) {
+        this.menuName=this.getClass().getSimpleName();
+        BookCatalogService bookCatalogService = (BookCatalogService) services.get(BookCatalogService.class.getSimpleName());
+        FindByAuthor author = new FindByAuthor(bookCatalogService);
+        FindByTitle title = new FindByTitle(bookCatalogService);
+        FindById id = new FindById(bookCatalogService);
+        Back back = new Back(bookCatalogService, menu);
+        ExitMenu exit = new ExitMenu();
 
-    public FindBookMenu(List<MenuCommand> commands) {
-        this.commands = commands;
+        List<MenuCommand> menuCommands=new ArrayList<>();
+
+        menuCommands.add(null);
+        menuCommands.add(author);
+        menuCommands.add(title);
+        menuCommands.add(id);
+        menuCommands.add(back);
+        menuCommands.add(exit);
+        this.commands = menuCommands;
     }
 
     public void startMenu() {
@@ -43,6 +64,18 @@ public class FindBookMenu implements IMenu{
                 exitRequested = command.shouldExit();
             }
         }
+    }
+
+    @Override
+    public IMenu getMenu(String name) {
+        if(this.getMenuName().equals(name))
+            return this;
+        return null;
+    }
+
+    @Override
+    public String getMenuName() {
+        return this.menuName;
     }
 
 }

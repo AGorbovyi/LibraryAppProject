@@ -1,29 +1,37 @@
-package libraryapp.ui.button.user;
+package ui.button.user;
 
-import java.util.List;
+import service.Service;
+import service.UserCardService;
+import service.util.UserInput;
+import ui.button.Button;
+import ui.button.MenuCommand;
 
-import libraryapp.service.UserCardService;
-import libraryapp.service.util.UserInput;
-import libraryapp.ui.button.MenuCommand;
-import main.java.libraryapp.ui.button.Button;
+import java.util.UUID;
 
+/**
+ * AIT-TR, cohort 42.1, Java Basic, Project1
+ *
+ * @author: Anton Gorbovyi
+ * @version: 12.05.2024
+ **/
 public class ReopenUserCard  extends Button implements MenuCommand {
 
-    public ReopenUserCard(List<Service> services) {
-        super(services);
+    public ReopenUserCard(Service service) {
+        super.put(service.getClass().getSimpleName(), service);
     }
 
 
     @Override
     public void executeCommand() {
-        int userID=UserInput.getInt("Get User ID: ");
-        UserCardService userCardService = super.getService(UserCardService.class);
-        userCardService.reopenUserCard(userID);
+        String userId=UserInput.getText("Enter reader ID: ");
+        var uid = UUID.fromString(userId);
+        UserCardService userCardService = (UserCardService) super.getService(UserCardService.class.getSimpleName());
+        userCardService.reopenUserCard(uid);
     }
 
     @Override
     public String getMenuName() {
-        return "Reopen Reader's Card";
+        return "Reopen reader's card";
     }
 
     @Override

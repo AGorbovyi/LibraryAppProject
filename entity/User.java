@@ -1,4 +1,4 @@
-package libraryapp.entity;
+package entity;
 
 import java.util.UUID;
 
@@ -10,12 +10,12 @@ import java.util.UUID;
  **/
 
 public class User {
-    private UUID userId;
-    private String name;
-    private String surname;
+    private final UUID userId;
+    private final String name;
+    private final String surname;
 
     public User(String name, String surname) {
-        this.userId = UUID.randomUUID().toString();
+        this.userId = UUID.randomUUID();
         this.name = name;
         this.surname = surname;
     }
@@ -48,10 +48,8 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "userID=" + getUserId() +
+        return "userID=" + getUserId() +
                 ", name='" + getName() + '\'' +
-                ", surname='" + getSurname() + '\'' +
-                '}';
+                ", surname='" + getSurname() + '\'';
     }
 }

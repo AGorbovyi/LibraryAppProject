@@ -1,32 +1,32 @@
-package libraryapp.ui.button.book;
+package ui.button.book;
+
+import service.BookCatalogService;
+import service.Service;
+import service.util.UserInput;
+import ui.button.Button;
+import ui.button.MenuCommand;
 
 /**
  * AIT-TR, cohort 42.1, Java Basic, Project1
  *
  * @author: Anton Gorbovyi
- * @version: 22.04.2024
+ * @version: 12.05.2024
  **/
 
-import libraryapp.service.BookCatalogService;
-import libraryapp.service.util.UserInput;
-import libraryapp.ui.button.MenuCommand;
-import main.java.libraryapp.ui.button.Button;
-
 public class AddBook extends Button implements MenuCommand {
-
-    public AddBook(List<Service> services) {
-        super(services);
+    private BookCatalogService service;
+    public AddBook(Service service) {
+        this.service= (BookCatalogService) service;
     }
 
     @Override
     public void executeCommand() {
         String author = UserInput.getText("Author: ");
-        String bookTitle = UserInput.getText("Titel: ");
+        String bookTitle = UserInput.getText("Title: ");
         String genre = UserInput.getText("Genre: ");
         String publisher = UserInput.getText("Publisher: ");
-        BookCatalogService bookCatalogService = super.getService(BookCatalogService.class);
-        bookCatalogService.addBook(author, bookTitle, genre, publisher);
-        System.out.println("Book added under catalog number: " + id);
+        service.addBook(author, bookTitle, genre, publisher);
+        System.out.println("Book added");
     }
 
     @Override

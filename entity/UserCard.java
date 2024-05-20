@@ -1,4 +1,9 @@
-package libraryapp.entity;
+package entity;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 /**
  * AIT-TR, cohort 42.1, Java Basic, Project1
  *
@@ -6,14 +11,12 @@ package libraryapp.entity;
  * @version 21-Apr-24
  **/
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class UserCard {
     private User user;
     private List<Book> borrowedBooks;
     private int booksLimit;
     private boolean isClosed;
+    private  int maxBooksLimit;
 
     public UserCard(User user) {
         this.user = user;
@@ -21,15 +24,9 @@ public class UserCard {
         this.booksLimit = 5;
         this.isClosed = false;
     }
-    public boolean borrowBook(Book book) {
-        if (booksLimit > 0) {
+    public void borrowBook(Book book) {
             borrowedBooks.add(book);
             booksLimit--;
-            return true;
-        } else {
-            System.out.println("You have reached the limit of borrowed books.");
-            return false;
-        }
     }
     public boolean returnBook(Book book) {
         if (borrowedBooks.contains(book)) {
@@ -37,7 +34,7 @@ public class UserCard {
             booksLimit++;
             return true;
         } else {
-            System.out.println("The book is not borrowed by this user.");
+            System.out.println("The book is not borrowed by this reader.");
             return false;
         }
     }
@@ -74,20 +71,23 @@ public class UserCard {
     public void setBooksLimit(int booksLimit) {
         this.booksLimit = booksLimit;
     }
+    public int getMaxBooksLimit() {
+        return 5;
+    }
 
     public void reopenCard() {
         this.borrowedBooks = new ArrayList<>();
         this.isClosed = false;
     }
 
-    public Integer getUserId() {
+    public UUID getUserId() {
         return this.user.getUserId();
     }
 
     @Override
     public String toString() {
         return "UserCard{" +
-                "user=" + user +
+                user +
                 ", borrowedBooks=" + borrowedBooks +
                 ", booksLimit=" + booksLimit +
                 ", isClosed=" + isClosed +

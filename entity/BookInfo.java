@@ -1,4 +1,4 @@
-package libraryapp.entity;
+package entity;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -23,7 +23,7 @@ public class BookInfo {
         this.isInLibrary = isInLibrary;
     }
 
-    public Integer getBorrowedTo() {
+    public UUID getBorrowedTo() {
         return borrowedTo;
     }
 
@@ -48,7 +48,10 @@ public class BookInfo {
     }
 
     public LocalDate getReturnDate() {
-        return returnDate;
+        if (borrowedDate != null && borrowedDuration != null) {
+            returnDate = borrowedDate.plusDays(borrowedDuration);
+        }
+        return null;
     }
 
     public void setReturnDate(LocalDate returnDate) {
@@ -57,12 +60,11 @@ public class BookInfo {
 
     @Override
     public String toString() {
-        return "BookInfo{" +
+        return
                 "isInLibrary=" + isInLibrary +
                 ", borrowedTo=" + borrowedTo +
                 ", borrowedDate=" + borrowedDate +
                 ", borrowedDuration=" + borrowedDuration +
-                ", returnDate=" + returnDate +
-                '}';
+                ", returnDate=" + returnDate;
     }
 }

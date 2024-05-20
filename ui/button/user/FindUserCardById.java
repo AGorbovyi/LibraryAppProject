@@ -6,30 +6,32 @@ import service.util.UserInput;
 import ui.button.Button;
 import ui.button.MenuCommand;
 
+import java.util.UUID;
+
 /**
  * AIT-TR, cohort 42.1, Java Basic, Project1
  *
  * @author: Anton Gorbovyi
  * @version: 12.05.2024
  **/
-public class AddUserCard extends Button  implements MenuCommand {
+public class FindUserCardById extends Button  implements MenuCommand {
 
-    public AddUserCard(Service service) {
-        super.put(service.getClass().getSimpleName(), service);
+    public FindUserCardById(Service service) {
+        super.put(service.getClass().getSimpleName(),service);
     }
 
 
     @Override
     public void executeCommand() {
-        String userName = UserInput.getText("Enter reader's first name: ");
-        String userSurname = UserInput.getText("Enter reader's last name: ");
+        String userId=UserInput.getText("Enter reader ID: ");
+        var uid = UUID.fromString(userId);
         UserCardService userCardService = (UserCardService) super.getService(UserCardService.class.getSimpleName());
-        userCardService.addNewUserCard(userName, userSurname);
+        userCardService.findUserCardById(uid);
     }
 
     @Override
     public String getMenuName() {
-        return "Add reader card";
+        return "Find reader card by ID";
     }
 
     @Override

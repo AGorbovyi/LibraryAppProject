@@ -1,4 +1,14 @@
-package libraryapp.service;
+package service;
+
+import entity.Book;
+import entity.User;
+import entity.UserCard;
+import repository.CrudRepository;
+import repository.UserCardRepository;
+
+import java.util.HashMap;
+import java.util.UUID;
+
 /**
  * AIT-TR, cohort 42.1, Java Basic, Project1
  *
@@ -6,98 +16,68 @@ package libraryapp.service;
  * @version 17-Apr-24
  */
 
-import java.util.UUID;
+public class UserCardService extends Service<CrudRepository, String, UserCardService> implements IService<CrudRepository, String, UserCardService>{
 
-import libraryapp.entity.Book;
-import libraryapp.entity.User;
-import libraryapp.entity.UserCard;
-import libraryapp.repository.UserCardRepository;
-
-public class UserCardService extends Service<UserCardRepository>{
-
-    public UserCardService(UserCardRepository repository) {
-        super(repository, repository.getClass().getSimpleName());
+    public UserCardService(HashMap<String, CrudRepository> repository) {
+        super(repository);
     }
 
     public void addNewUserCard(String userName, String userSurname) {
         User user = new User(userName, userSurname);
         UserCard userCard = new UserCard(user);
-        super.getRepository().put(userCard);
-        System.out.println("User card added to repository: " + userCard);
-    }
-
-    public boolean updateUserCard(String name, String surname) {
-        UserCard userCard = findUserCardByName(name);
-        if (userCard != null) {
-            userCard.getUser().setName(name);
-            userCard.getUser().setSurname(surname);
-            return true;
-        }
-        return false;
-    }
-
-    static boolean validateVarName(String varName) {
-        // check variable name length
-        if (varName.length() > 1) {
-            System.out.println("Error: variable name is too long");
-            return false;
-        }
-        if (varName.isEmpty()) {
-            System.out.println("Error: variable name is empty");
-            return false;
-        }
-        char firstChar = varName.charAt(0); // check if variable name in 'a'.'z'
-        if (!(firstChar >= 'a' && firstChar <= 'z')) {
-            System.out.println("Error: variable name is invalid ");
-            return false;
-        }
-        return true;
+        UserCardRepository repo = (UserCardRepository) super.getRepository(UserCardRepository.class.getSimpleName());
+        repo.put(userCard);
+        System.out.println("Reader card added: " + userCard);
     }
 
     public UserCard findUserCardByName(String name) {
-        for (UserCard userCard : super.getRepository().values()) {
+        UserCardRepository repo = (UserCardRepository) super.getRepository(UserCardRepository.class.getSimpleName());
+        for (UserCard userCard : repo.values())
             if (userCard.getUser().getName().equalsIgnoreCase(name)) {
-                System.out.println("UserCard found");
+                System.out.println("Reader card found");
                 return userCard;
             }
-        }
-        System.out.println("User card with name \"" + name + "\"is not found!");
+        System.out.println("Reader card with name \"" + name + "\" not found!");
         return null;
     }
 
     public UserCard findUserCardById(UUID userId) {
-        UserCard userCard = super.getRepository().get(userId);
+        UserCardRepository repo = (UserCardRepository) super.getRepository(UserCardRepository.class.getSimpleName());
+        UserCard userCard = repo.get(userId);
         if (userCard != null) {
-            System.out.println("User card found! " + userCard);
+            System.out.println("Reader card is found! " + userCard);
         } else {
-            System.out.println("User Card with ID " + userId + " not found");
+            System.out.println("Reader card with ID " + userId + " not found");
         }
         return userCard;
     }
 
     public boolean closeUserCard(UUID userId) {
-        UserCard userCard = super.getRepository().get(userId);
+        UserCardRepository repo = (UserCardRepository) super.getRepository(UserCardRepository.class.getSimpleName());
+        UserCard userCard = repo.get(userId);
         if (userCard != null) {
             userCard.closeCard();
             return true;
         } else {
-            System.out.println("UserCard with ID " + userId + " not found.");
+            System.out.println("Reader card with ID " + userId + " not found.");
             return false;
         }
     }
 
     public void reopenUserCard(UUID userId) {
-        UserCard userCard = super.getRepository().get(userId);
+        UserCardRepository repo = (UserCardRepository) super.getRepository(UserCardRepository.class.getSimpleName());
+        UserCard userCard = repo.get(userId);
         if (userCard != null) {
             userCard.reopenCard();
-            System.out.println("UserCard with Id " + userId + " reopened.");
+            System.out.println("Reader card with ID " + userId + " reopened.");
         } else {
-            System.out.println("UserCard with ID " + userId + " not found.");
+            System.out.println("Reader card with ID " + userId + " not found.");
         }
     }
 
     public User findUserByBook(Book book) {
-        for (UserCard userCard : super.getRepository().values()) {
+        UserCardRepository repo = (UserCardRepository) super.getRepository(UserCardRepository.class.getSimpleName());
+        for (UserCard userCard : repo.values()) {
             if (userCard.getUserBookList().contains(book)) {
                 return userCard.getUser();
             }
@@ -106,7 +86,7 @@ public class UserCardService extends Service<UserCardRepository>{
     }
 
     public void print() {
-        super.getRepository().values().forEach(System.out::println);
+        UserCardRepository repo = (UserCardRepository) super.getRepository(UserCardRepository.class.getSimpleName());
+        repo.values().forEach(System.out::println);
     }
-
 }

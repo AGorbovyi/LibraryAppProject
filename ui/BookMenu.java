@@ -1,24 +1,49 @@
-package libraryapp.ui;
+package ui;
+
+import service.BookCatalogService;
+import service.Service;
+import ui.button.Back;
+import ui.button.ExitMenu;
+import ui.button.MenuCommand;
+import ui.button.book.AddBook;
+import ui.button.book.FindBook;
+import ui.button.book.RemoveBook;
+import ui.button.book.ViewAllBooks;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  * AIT-TR, cohort 42.1, Java Basic, Project1
  *
  * @author: Anton Gorbovyi
- * @version: 22.04.2024
+ * @version: 12.05.2024
  **/
-
-import libraryapp.ui.button.MenuCommand;
-import main.java.libraryapp.ui.IMenu;
-
-import java.util.List;
-import java.util.Scanner;
-
 public class BookMenu implements IMenu {
 
-    private final List<MenuCommand> commands;
+    private List<MenuCommand> commands;
+    private final String menuName;
 
-    public BookMenu(List<MenuCommand> commands) {
-        this.commands = commands;
+    public BookMenu(HashMap<String, Service> services, IMenu menu) {
+        this.menuName=this.getClass().getSimpleName();
+        var menuCommands = new ArrayList<MenuCommand>();
+        AddBook addBook = new AddBook(services.get(BookCatalogService.class.getSimpleName()));
+        ViewAllBooks viewAllBooks = new ViewAllBooks(services.get(BookCatalogService.class.getSimpleName()));
+        FindBook findBook = new FindBook(services.get(BookCatalogService.class.getSimpleName()), this);
+        RemoveBook removeBook = new RemoveBook(services.get(BookCatalogService.class.getSimpleName()));
+        Back back = new Back(services.get(BookCatalogService.class.getSimpleName()), menu);
+        ExitMenu exitMenu = new ExitMenu();
+        menuCommands.add(null);
+        menuCommands.add(addBook);
+        menuCommands.add(viewAllBooks);
+        menuCommands.add(findBook);
+        menuCommands.add(removeBook);
+        menuCommands.add(back);
+        menuCommands.add(exitMenu);
+        this.commands = menuCommands;
+
     }
 
     public void startMenu() {
@@ -41,5 +66,17 @@ public class BookMenu implements IMenu {
                 exitRequested = command.shouldExit();
             }
         }
+    }
+
+    @Override
+    public IMenu getMenu(String name) {
+        if(this.getMenuName().equals(name))
+            return this;
+        return null;
+    }
+
+    @Override
+    public String getMenuName() {
+        return this.menuName;
     }
 }

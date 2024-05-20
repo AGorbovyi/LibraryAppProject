@@ -1,18 +1,21 @@
-package libraryapp.ui.button;
+package ui.button;
 
-import libraryapp.ui.AdminMenu;
-import libraryapp.ui.BookMenu;
-import main.java.libraryapp.ui.IMenu;
-import main.java.libraryapp.ui.button.Button;
+import service.Service;
+import ui.IMenu;
 
+/**
+ * AIT-TR, cohort 42.1, Java Basic, Project1
+ *
+ * @author: Anton Gorbovyi
+ * @version: 12.05.2024
+ **/
 public class Back extends Button implements MenuCommand {
-    private IMenu menu;
 
-    public Back(List<Service> services, IMenu menu) {
-        super(services);
-        this.menu = menu;
+    private final IMenu menu;
+    public Back(Service service, IMenu menu) {
+        super.put(service.getClass().getSimpleName(), service);
+        this.menu=menu;
     }
-
     @Override
     public void executeCommand() {
         menu.startMenu();

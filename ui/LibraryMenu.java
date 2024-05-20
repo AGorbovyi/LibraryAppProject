@@ -1,22 +1,42 @@
-package libraryapp.ui;
+package ui;
+
+import service.LibraryService;
+import service.Service;
+import ui.button.Back;
+import ui.button.ExitMenu;
+import ui.button.MenuCommand;
+import ui.button.library.BorrowBook;
+import ui.button.library.ReturnBook;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  * AIT-TR, cohort 42.1, Java Basic, Project1
  *
  * @author: Anton Gorbovyi
- * @version: 22.04.2024
+ * @version: 12.05.2024
  **/
 
-import libraryapp.ui.button.MenuCommand;
-import main.java.libraryapp.ui.IMenu;
-
-import java.util.List;
-import java.util.Scanner;
-
 public class LibraryMenu implements IMenu {
-    private final List<MenuCommand> commands;
-    public LibraryMenu(List<MenuCommand> commands) {
-        this.commands = commands;
+    private List<MenuCommand> commands;
+    private final String menuName;
+
+    public LibraryMenu(HashMap<String, Service> services, IMenu menu) {
+        this.menuName=this.getClass().getSimpleName();
+        BorrowBook borrow = new BorrowBook(services.get(LibraryService.class.getSimpleName()));
+        ReturnBook returnBook = new ReturnBook(services.get(LibraryService.class.getSimpleName()));
+        Back back = new Back(services.get(LibraryService.class.getSimpleName()), menu);
+        ExitMenu exitMenu=new ExitMenu();
+        var menuCommands = new ArrayList<MenuCommand>();
+        menuCommands.add(null);
+        menuCommands.add(borrow);
+        menuCommands.add(returnBook);
+        menuCommands.add(back);
+        menuCommands.add(exitMenu);
+        this.commands = menuCommands;
     }
 
     public void startMenu(){
@@ -39,5 +59,17 @@ public class LibraryMenu implements IMenu {
                 exitRequested = command.shouldExit();
             }
         }
+    }
+
+    @Override
+    public IMenu getMenu(String name) {
+        if(this.getMenuName().equals(name))
+            return this;
+        return null;
+    }
+
+    @Override
+    public String getMenuName() {
+        return this.menuName;
     }
 }

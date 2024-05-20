@@ -1,24 +1,32 @@
-package libraryapp.ui.button.book;
+package ui.button.book;
 
-import java.util.List;
+import entity.Book;
+import service.BookCatalogService;
+import service.Service;
+import service.util.UserInput;
+import ui.button.Button;
+import ui.button.MenuCommand;
 
-import libraryapp.entity.Book;
-import libraryapp.service.BookCatalogService;
-import libraryapp.service.util.UserInput;
-import libraryapp.ui.button.MenuCommand;
-import main.java.libraryapp.ui.button.Button;
+import java.util.UUID;
 
+/**
+ * AIT-TR, cohort 42.1, Java Basic, Project1
+ *
+ * @author: Anton Gorbovyi
+ * @version: 12.05.2024
+ **/
 public class FindById extends Button  implements MenuCommand {
 
-    public FindById(List<Service> services) {
-        super(services);
+    public FindById(Service service) {
+        super.put(service.getClass().getSimpleName(), service);
     }
 
     @Override
     public void executeCommand() {
-        int id = UserInput.getInt("Enter book ID: ");
-        BookCatalogService bookCatalogService = super.getService(BookCatalogService.class);
-        Book book = bookCatalogService.findByCatalogNumber(id);
+        String id = UserInput.getText("Enter book ID: ");
+        BookCatalogService bookCatalogService= (BookCatalogService) super.getService(BookCatalogService.class.getSimpleName());
+        UUID uid = UUID.fromString(id);
+        Book book = bookCatalogService.findByCatalogNumber(uid);
         if (book != null) {
             System.out.println(book);
         } else{

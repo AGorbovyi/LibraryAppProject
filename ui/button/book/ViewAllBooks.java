@@ -1,21 +1,26 @@
-package libraryapp.ui.button.book;
+package ui.button.book;
 
-import java.util.List;
+import service.BookCatalogService;
+import service.Service;
+import ui.button.Button;
+import ui.button.MenuCommand;
 
-import libraryapp.service.BookCatalogService;
-import libraryapp.ui.button.MenuCommand;
-import main.java.libraryapp.ui.button.Button;
-
+/**
+ * AIT-TR, cohort 42.1, Java Basic, Project1
+ *
+ * @author: Anton Gorbovyi
+ * @version: 12.05.2024
+ **/
 public class ViewAllBooks extends Button  implements MenuCommand {
 
-    public ViewAllBooks(List<Service> services) {
-        super(services);
+    private BookCatalogService service;
+    public ViewAllBooks(Service service) {
+        this.service= (BookCatalogService) service;
     }
 
     @Override
     public void executeCommand() {
-        BookCatalogService bookCatalogService = super.getService(BookCatalogService.class);
-        bookCatalogService.printCatalog();
+        service.printCatalog();
     }
 
     @Override

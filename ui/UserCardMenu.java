@@ -1,23 +1,50 @@
-package libraryapp.ui;
+package ui;
+
+import service.Service;
+import service.UserCardService;
+import ui.button.Back;
+import ui.button.ExitMenu;
+import ui.button.MenuCommand;
+import ui.button.user.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  * AIT-TR, cohort 42.1, Java Basic, Project1
  *
  * @author: Anton Gorbovyi
- * @version: 22.04.2024
+ * @version: 12.05.2024
  **/
-
-import libraryapp.ui.button.MenuCommand;
-
-import java.util.List;
-import java.util.Scanner;
-
 public class UserCardMenu implements IMenu{
 
-    private final List<MenuCommand> commands;
-    
-    public UserCardMenu(List<MenuCommand> commands) {
-        this.commands = commands;
+    private List<MenuCommand> commands;
+    private final String menuName;
+    private IMenu previous_menu;
+
+    public UserCardMenu(HashMap<String, Service> services, IMenu menu) {
+        this.menuName=this.getClass().getSimpleName();
+        AddUserCard addUserCard = new AddUserCard(services.get(UserCardService.class.getSimpleName()));
+        ViewAllUserCards viewAllUserCards = new ViewAllUserCards(services.get(UserCardService.class.getSimpleName()));
+        FindUserCardById findUserCardById = new FindUserCardById(services.get(UserCardService.class.getSimpleName()));
+        FindUserCardByName findUserCardByNames = new FindUserCardByName(services.get(UserCardService.class.getSimpleName()));
+        CloseUserCard closeUserCard = new CloseUserCard(services.get(UserCardService.class.getSimpleName()));
+        ReopenUserCard reopenCard = new ReopenUserCard(services.get(UserCardService.class.getSimpleName()));
+        Back back = new Back(services.get(UserCardService.class.getSimpleName()), menu);
+        ExitMenu exitMenu=new ExitMenu();
+        var menuCommands = new ArrayList<MenuCommand>();
+        menuCommands.add(null);
+        menuCommands.add(addUserCard);
+        menuCommands.add(viewAllUserCards);
+        menuCommands.add(findUserCardById);
+        menuCommands.add(findUserCardByNames);
+        menuCommands.add(closeUserCard);
+        menuCommands.add(reopenCard);
+        menuCommands.add(back);
+        menuCommands.add(exitMenu);
+        this.commands = menuCommands;
     }
 
     public void startMenu(){
@@ -40,5 +67,16 @@ public class UserCardMenu implements IMenu{
                 exitRequested = command.shouldExit();
             }
         }
+    }
+    @Override
+    public IMenu getMenu(String name) {
+        if(this.getMenuName().equals(name))
+            return this;
+        return null;
+    }
+
+    @Override
+    public String getMenuName() {
+        return this.menuName;
     }
 }

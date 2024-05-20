@@ -1,8 +1,9 @@
-package libraryapp.entity;
-import java.time.LocalDate;
+package entity;
+
+import java.util.UUID;
 
 public class Book {
-    private UUID id;
+    private final UUID id;
     private String author;
     private String bookTitle;
     private String genre;
@@ -10,11 +11,11 @@ public class Book {
     private BookInfo bookInfo;
 
     public Book(String author, String bookTitle, String genre, String publisher) {
+        id = UUID.randomUUID();
         this.author = author;
         this.bookTitle = bookTitle;
         this.genre = genre;
         this.publisher = publisher;
-        id = UUID.randomUUID().toString();
     }
 
     public String getAuthor() {
@@ -49,7 +50,7 @@ public class Book {
         this.publisher = publisher;
     }
 
-    public UUID getID(){
+    public UUID getId(){
         return id;
     }
 
@@ -63,11 +64,12 @@ public class Book {
     @Override
     public String toString() {
         return "Book{" +
-                "bookID=" + getID() + '\''+
+                "bookID=" + getId() +
                 ", author='" + getAuthor() + '\'' +
                 ", bookTitle='" + getBookTitle() + '\'' +
                 ", genre='" + getGenre() + '\'' +
                 ", publisher='" + getPublisher() + '\'' +
+                ", " + (bookInfo == null? "available" : bookInfo) +
                 '}';
     }
 }
